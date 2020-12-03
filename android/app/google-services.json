@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "471007367773",
+    "firebase_url": "https://words-app-73a43.firebaseio.com",
+    "project_id": "words-app-73a43",
+    "storage_bucket": "words-app-73a43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:471007367773:android:0db8aa7ed709b73129f3b4",
+        "android_client_info": {
+          "package_name": "com.words"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "471007367773-fujn90agijiqpe9230307oiphu9tf2kh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGfJNTXxSlsNmH_zxM-N8_bQsF7STU5oE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "471007367773-fujn90agijiqpe9230307oiphu9tf2kh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
