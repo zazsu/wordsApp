@@ -1,16 +1,17 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
 
 import { Context } from '../navigation/ContextProvider';
+import GlobalStyles from '../css/styles'
 
 const ProfileScreen = () => {
   const {user, logout} = useContext(Context);
   
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Logged in as</Text>
-      <Text style={styles.text}>{user.email}</Text>
-      <View style={styles.logoutButton}><Button  title='Logout' color='coral' buttonTitle='Logout' onPress={() => logout()} /></View>
+    <View style={GlobalStyles.container}>
+      <Text>Logged in as</Text>
+      <Text>{user.email}</Text>
+      <TouchableOpacity style={GlobalStyles.buttonPrimary} onPress={() => logout()} ><Text style={GlobalStyles.buttonText}>LOGOUT</Text></TouchableOpacity>
       
     </View>
   );
@@ -19,15 +20,5 @@ const ProfileScreen = () => {
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 30
-  },
-  text: {
 
-  },
-  logoutButton: {
-
-  }
 });

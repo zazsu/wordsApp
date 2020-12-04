@@ -12,10 +12,10 @@ const GlobalStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
-    marginTop: 40,
+    marginTop: 30,
     marginBottom: 10
     }, 
-    buttonText: {
+  buttonText: {
       fontSize:20,
       color: '#fff'
     },

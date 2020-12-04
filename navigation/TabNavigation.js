@@ -18,18 +18,19 @@ const TabNavigation = ({navigation}) => {
         let iconName;
 
         if (route.name === 'Home') {
-          iconName = 'home';
+          iconName = 'home-sharp';
         } else if (route.name === 'Edit') {
-          iconName = 'settings';
+          iconName = 'create-sharp';
         } else if (route.name === 'Profile') {
-          iconName = 'settings';
+          iconName = 'person-sharp';
         }
         return <Ionicons name={iconName} size={size} color={color}></Ionicons>;
       },
+      cardStyle: { backgroundColor: '#fff' }
     })}
     tabBarOptions={{
-      activeTintColor: 'coral',
-      inactiveTintColor: 'gray',
+      activeTintColor: '#FB8B24',
+      inactiveTintColor: '#47305F',
       showLabel: false
     }}>
         <Tabs.Screen name="Home" component={HomeScreen} />

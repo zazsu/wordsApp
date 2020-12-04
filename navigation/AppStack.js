@@ -6,7 +6,11 @@ const Stack = createStackNavigator();
 
 const AppStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Words App">  
+    <Stack.Navigator 
+      initialRouteName="Words App"
+      screenOptions={{
+        cardStyle: { backgroundColor: '#fff' }
+    }}> 
       <Stack.Screen name="Words App" component={TabNavigation}></Stack.Screen>
     </Stack.Navigator>
   );
