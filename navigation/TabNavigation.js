@@ -1,3 +1,6 @@
+/* Author: Eeva Mattila 
+Student number: 1903054 */
+
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,15 +11,16 @@ import HomeScreen from '../screens/HomeScreen'
 
 const Tabs = createBottomTabNavigator();
 
-const TabNavigation = ({navigation}) => {
-
+//tab navigator for authenticated users
+//nested inside stack navigation
+const TabNavigation = () => {
   return (
     <Tabs.Navigator 
      initialRouteName="Home"
      screenOptions={({ route }) => ({
       tabBarIcon: ({ color, size }) => {
+        //tab icon switches based on route
         let iconName;
-
         if (route.name === 'Home') {
           iconName = 'home-sharp';
         } else if (route.name === 'Edit') {

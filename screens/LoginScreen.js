@@ -1,3 +1,6 @@
+/* Author: Eeva Mattila 
+Student number: 1903054 */
+
 import React, {useContext, useState} from 'react';
 import {SafeAreaView, View, Pressable, TextInput, TouchableOpacity, StyleSheet, Text} from 'react-native';
 
@@ -40,9 +43,7 @@ const LoginScreen = ({navigation}) => {
         />
       </View>  
       <TouchableOpacity style={GlobalStyles.buttonPrimary} onPress={() => onLogin()} ><Text style={GlobalStyles.buttonText}>LOGIN</Text></TouchableOpacity>
-      <Pressable  onPress={() => navigation.navigate(("Sign Up"))}>
-        <Text>Dont have an account yet? Sign up</Text>
-      </Pressable>
+        <Text style={GlobalStyles.textPurple} onPress={() => navigation.navigate(("Sign Up"))}>Dont have an account yet? Sign up</Text>
     </SafeAreaView>
   );
 };

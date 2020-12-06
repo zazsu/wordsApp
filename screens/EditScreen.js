@@ -1,47 +1,90 @@
-import React, { useContext, useState } from 'react';
+/* Author: Eeva Mattila 
+Student number: 1903054 */
+
+import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, SafeAreaView, TextInput, Modal, Pressable } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import firestore from "@react-native-firebase/firestore"
 
 import { Context } from '../navigation/ContextProvider';
 import GlobalStyles from '../css/styles'
 
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-
-];
-
-
-//change this
-const Item = ({ item }) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{item.title}</Text>
-  </View>
-);
-
 const EditScreen = () => {
-  const {user, logout} = useContext(Context);
+  //get user information from context
+  const {user} = useContext(Context);
+  
+  //save user input in state
   const [newItem1, setNewItem1] = useState();
   const [newItem2, setNewItem2] = useState();
-  const [modalVisible, setModalVisible] = useState(false);
 
+  //support for modal and words
+  const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [words, setWords] = useState([]);
+
+  //Item used for displaying words in a list
+  const Item = ({ item }) => (
+    <View style={styles.item}>
+      <View>
+        <Text style={GlobalStyles.textOrange}>{item.word1}</Text>
+      </View>
+      <View>
+        <Text style={GlobalStyles.textPurple}>{item.word2}</Text>
+      </View>
+      <Pressable onPress={() => removeWords(item)} style={styles.closeButton}><Ionicons style={styles.removeIonicon}  name='close-sharp'></Ionicons></Pressable> 
+    </View>
+  );
+
+  //update the database in real time
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('Users')
+      .doc(user.uid)
+      .collection('Words')
+      .onSnapshot(querySnapshot  => {
+
+        //array for words and a unique key
+        const w = [];
+        //get the words from database and push to array
+        querySnapshot.forEach(documentSnapshot => {
+          w.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+            word1: documentSnapshot.data().word1,
+            word2: documentSnapshot.data().word2
+          });
+        });
+
+        //save array in state
+        setWords(w);
+        setLoading(false);
+      });
+    // Unsubscribe from events when no longer in use
+    return () => subscriber();
+  }, []);
+
+  //reset words if modal is closed without creating a new word
   function closeModal() {
     setNewItem1()
     setNewItem2()
     setModalVisible(false)
+    console.log('Words' + words);
   }
 
+  //remove a specific word from database
+  function removeWords(item) {
+    firestore()
+    .collection('Users')
+    .doc(user.uid)
+    .collection('Words')
+    .doc(item.key)
+    .delete()
+    .then(() => {
+      console.log('Word deleted!');
+    });
+  }
+
+  //Add new words to database in the current users collection
   function onAddNew() {
     if(!newItem1) {
       alert('enter first word')
@@ -50,18 +93,32 @@ const EditScreen = () => {
       alert('enter second word')
       return
     }
+    firestore()
+      .collection('Users')
+      .doc(user.uid)
+      .collection('Words')
+      .add({
+        word1: newItem1,
+        word2: newItem2
+      })
     setNewItem1()
     setNewItem2()
     setModalVisible(false)
   }
   
+  if (loading) {
+    return (
+      <SafeAreaView style={GlobalStyles.container}><Text>Loading</Text></SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={GlobalStyles.container}>
     <FlatList
-    ListHeaderComponent={<Text>Title</Text>}
-      data={DATA}
+    ListHeaderComponent={<Text style={styles.title}>Your words</Text>}
+      data={words}
       renderItem={Item}
-      keyExtractor={item => item.id}
+      keyExtractor={item => item.key}
     />
     <Pressable style={styles.floatingButton} onPress={() => setModalVisible(true)} ><Ionicons style={styles.ionicon} color='white' name='add-sharp'></Ionicons></Pressable>
     <Modal 
@@ -71,27 +128,24 @@ const EditScreen = () => {
       onRequestClose={() => {
         Alert.alert("New item added");
       }}>
-        <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <TextInput style={GlobalStyles.formInput}
-            numberOfLines={1}
-            placeholder='Word 1'
-            onChangeText={(item1) => setNewItem1(item1)}
-          />
-
-          <TextInput style={GlobalStyles.formInput}
-            numberOfLines={1}
-            placeholder='Word 2'
-            onChangeText={(item2) => setNewItem2(item2)}
-          />
-          <Pressable style={GlobalStyles.buttonPrimary} onPress={onAddNew} ><Text style={GlobalStyles.buttonText}>Add to list</Text></Pressable>   
-          <Pressable onPress={closeModal} style={styles.closeButton}><Ionicons style={styles.ionicon}  name='close-sharp'></Ionicons></Pressable>
-          </View>
-
+      <View style={styles.centeredView}>
+      <View style={styles.modalView}>
+        <TextInput style={GlobalStyles.formInput}
+          numberOfLines={1}
+          placeholder='Word 1'
+          onChangeText={(item1) => setNewItem1(item1)}
+        />
+        <TextInput style={GlobalStyles.formInput}
+          numberOfLines={1}
+          placeholder='Word 2'
+          onChangeText={(item2) => setNewItem2(item2)}
+        />
+        <Pressable style={GlobalStyles.buttonPrimary} onPress={onAddNew} ><Text style={GlobalStyles.buttonText}>Add to list</Text></Pressable>   
+        <Pressable onPress={closeModal} style={styles.closeButton}><Ionicons style={styles.ionicon}  name='close-sharp'></Ionicons></Pressable>
         </View>
+      </View>
       </Modal> 
     </SafeAreaView>
-
   );
 }
 
@@ -111,10 +165,16 @@ const styles = StyleSheet.create({
     
   },
   item: {
-    padding: 20,
+    flexWrap: 'wrap',
+    alignContent: 'center',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
     marginVertical: 8,
-    marginHorizontal: 16,
-    backgroundColor: 'pink'
+    borderBottomWidth: 1,
+    borderColor: '#47305F',
+    backgroundColor: 'white'
   },
   centeredView: {
     flex: 1,
@@ -155,5 +215,23 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     top: 10
+  },
+  title: {
+    fontSize: 20,
+    textAlign: 'center'
+  },
+  separator: {
+    position: 'absolute',
+    top: '100%',
+    left: '50%'
+  },
+  removeIonicon: {
+    fontSize: 20
+  },
+  title: {
+    color: '#47305F',
+    fontSize: 40,
+    marginVertical: 20,
+    alignSelf: 'center'
   }
 });

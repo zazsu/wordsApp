@@ -1,3 +1,6 @@
+/* Author: Eeva Mattila 
+Student number: 1903054 */
+
 import 'react-native-gesture-handler';
 import React from 'react';
 
